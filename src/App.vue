@@ -3,7 +3,7 @@ import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import html2canvas from "html2canvas";
 const instance = axios.create({
-  baseURL: "", // 配置基础请求地址
+  baseURL: "https://aip.baidubce.com", // 配置基础请求地址
   timeout: 5000, // 设置请求超时时间
 });
 instance.defaults.withCredentials = true;
