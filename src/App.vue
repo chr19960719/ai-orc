@@ -141,7 +141,6 @@ const cropperImg = ref<any>(null);
 const handleConfirm = () => {
   if (cropper.value == null) return;
   cropper.value.getCropData((data: any) => {
-    cropperImg.value = data;
     console.log("object :>> ", data.w);
     orc(data);
   });
@@ -202,6 +201,7 @@ const saveImg = () => {
 </script>
 
 <template>
+  <img :src="cropperImg" alt="截取图片" style="width: 400px" />
   <div class="upload">
     <el-upload
       drag
@@ -230,7 +230,6 @@ const saveImg = () => {
       </div>
     </div>
   </div>
-  <img :src="cropperImg" alt="截取图片" />
   <el-dialog v-model="dialogVisible" width="30%" class="my-dialog">
     <div class="content" style="width: 300px; height: 400px">
       <vue-cropper
@@ -255,17 +254,22 @@ const saveImg = () => {
 .sort {
   line-height: 30px;
   text-align: left;
+  width: 400px;
+  overflow-x: auto;
 }
 .value {
   color: red;
 }
 .upload {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>
 <style>
 .my-dialog {
-  min-width: 500px !important;
+  min-width: 368px !important;
   display: flex;
   justify-content: center;
   align-items: center;
