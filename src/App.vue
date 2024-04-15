@@ -3,7 +3,7 @@ import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import html2canvas from "html2canvas";
 const instance = axios.create({
-  baseURL: "https://aip.baidubce.com", // 配置基础请求地址
+  baseURL: "", // 配置基础请求地址
   timeout: 5000, // 设置请求超时时间
 });
 instance.defaults.withCredentials = true;
@@ -67,17 +67,11 @@ const MyJsonParse = (json: any) => {
   arr.forEach((item: any, index: number) => {
     if (item.includes("家园")) {
       if (item.length <= 9) {
-        if (arr[index - 1].includes("本周活跃值")) {
-          arr[index - 1] = "🌙";
-        }
         newArr.push({
           text: arr[index - 1] + arr[index] + arr[index + 1],
           value: arr[index + 2],
         });
       } else {
-        if (arr[index].includes("本周活跃值")) {
-          arr[index] = "🌙";
-        }
         if (arr[index + 1].length > 6) {
           newArr.push({
             text: arr[index] + arr[index + 1].slice(0, 6),
@@ -198,6 +192,42 @@ const saveImg = () => {
       console.log("err :>> ", err);
     });
 };
+
+// 手动插入的名字
+const newName = ref<string>("");
+// 手动插入的活跃度
+const newActive = ref<number>(0);
+// 需要修改的索引值
+const editIndex = ref<number>(-1);
+const handleEdit = () => {
+  if (editIndex.value < 0) {
+    if (newName.value && newActive.value) {
+      newArr.unshift({
+        text: newName.value,
+        value: newActive.value,
+      });
+      newName.value = "";
+      newActive.value = 0;
+    }
+  } else {
+    if (newName.value) {
+      let value = newActive.value;
+      if (value === 0) {
+        value = newArr[editIndex.value - 1].value;
+      }
+      newArr.splice(editIndex.value - 1, 1, {
+        text: newName.value,
+        value: value,
+      });
+      newName.value = "";
+      newActive.value = 0;
+      editIndex.value = -1;
+    }
+  }
+  newArr.sort((a: any, b: any) => {
+    return b.value - a.value;
+  });
+};
 </script>
 
 <template>
@@ -221,6 +251,24 @@ const saveImg = () => {
         <el-button type="primary" @click="saveImg"> 保存活跃截图 </el-button>
       </template>
     </el-upload>
+    <!-- 手动插入记录 -->
+    <el-row>
+      <el-col :span="4">插入的排名：</el-col>
+      <el-col :span="4">
+        <el-input v-model="editIndex" type="number" />
+      </el-col>
+      <el-col :span="4">插入的名字：</el-col>
+      <el-col :span="4">
+        <el-input v-model="newName" />
+      </el-col>
+      <el-col :span="4">插入的活跃度：</el-col>
+      <el-col :span="4">
+        <el-input v-model="newActive" type="number" />
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-button type="primary" @click="handleEdit"> 插入 </el-button>
+    </el-row>
     <!-- 排名 -->
     <div class="sort" ref="sortNode">
       <div v-for="(item, index) in newArr" :key="item.text">
@@ -265,6 +313,12 @@ const saveImg = () => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+.split {
+  width: 100%;
+  height: 1px;
+  border: 1px solid red;
+  color: red;
 }
 </style>
 <style>
