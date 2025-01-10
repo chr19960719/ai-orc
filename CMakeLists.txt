@@ -11,9 +11,9 @@
 # CMake-generated project formats that have been tested with this CEF binary
 # distribution include:
 #
-# Linux:      Ninja, Unix Makefiles
-# MacOS:      Ninja, Xcode 8+ (x64) or Xcode 12.2+ (ARM64)
-# Windows:    Ninja, Visual Studio 2015+
+# Linux:      Ninja, GCC 7.5.0+, Unix Makefiles
+# MacOS:      Ninja, Xcode 12.2 to 13.0
+# Windows:    Ninja, Visual Studio 2019+
 #
 # Ninja is a cross-platform open-source tool for running fast builds using
 # pre-installed platform toolchains (GNU, clang, Xcode or MSVC). It can be
@@ -36,25 +36,27 @@
 #
 # The below requirements must be met to build this CEF binary distribution.
 #
-# - CMake version 2.8.12.1 or newer.
+# - CMake version 3.19 or newer.
 #
 # - Linux requirements:
-#   Currently supported distributions include Debian Wheezy, Ubuntu Precise, and
-#   related. Ubuntu 18.04 64-bit is recommended. Newer versions will likely also
-#   work but may not have been tested.
+#   Currently supported distributions include Debian 10 (Buster), Ubuntu 18
+#   (Bionic Beaver), and related. Ubuntu 18.04 64-bit with GCC 7.5.0+ is
+#   recommended. Newer versions will likely also work but may not have been
+#   tested.
 #   Required packages include:
 #     build-essential
-#     libgtk2.0-dev     (required by the cefclient target only)
-#     libgtkglext1-dev  (required by the cefclient target only)
+#     libgtk3.0-dev     (required by the cefclient target only)
 #
 # - MacOS requirements:
-#   Xcode 8 or newer building on MacOS 10.10 (Yosemite) or newer. Xcode 11.2
-#   and MacOS 10.14 are recommended. The Xcode command-line tools must also be
-#   installed. Only 64-bit builds are supported.
+#   Xcode 12.2 to 13.0 building on MacOS 10.15.4 (Catalina) or newer. Only
+#   64-bit builds are supported. The Xcode command-line tools must also be
+#   installed. Newer Xcode versions may not have been been tested and are not
+#   recommended.
 #
 # - Windows requirements:
-#   Visual Studio 2015 Update 2 or newer building on Windows 7 or newer. Visual
-#   Studio 2019 and Windows 10 64-bit are recommended.
+#   Visual Studio 2019 or newer building on Windows 7 or newer. Windows 10
+#   64-bit is recommended. Newer versions will likely also work but may not have
+#   been tested.
 #
 # BUILD EXAMPLES
 #
@@ -114,13 +116,24 @@
 #     > "C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build\vcvars64.bat"
 #     > cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug ..
 #     > ninja cefclient cefsimple
+#
+# To perform a Windows build using an ARM64 CEF binary distribution:
+#   Using the Visual Studio 2019 IDE:
+#     > cmake -G "Visual Studio 16" -A arm64 ..
+#     Open build\cef.sln in Visual Studio and select Build > Build Solution.
+#
+#   Using Ninja with Visual Studio 2019 command-line tools:
+#     (this path may be different depending on your Visual Studio installation)
+#     > "C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build\vcvarsamd64_arm64.bat"
+#     > cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug ..
+#     > ninja cefsimple
 
 #
 # Global setup.
 #
 
-# 修改cmake 版本
-cmake_minimum_required(VERSION 2.8.12.1...3.20.0)
+# For VS2019 and Xcode 12+ support.
+cmake_minimum_required(VERSION 3.19)
 
 # 设置c++标准
 add_definitions("-std=c++11")
