@@ -135,11 +135,8 @@
 # For VS2019 and Xcode 12+ support.
 cmake_minimum_required(VERSION 3.19)
 
-# 设置c++标准
-add_definitions("-std=c++11")
-
 # Only generate Debug and Release configuration types.
-set(CMAKE_CONFIGURATION_TYPES Debug Release)
+set(CMAKE_CONFIGURATION_TYPES Release)
 
 # Project name.
 # TODO: Change this line to match your project name when you copy this file.
@@ -161,6 +158,8 @@ set_property(GLOBAL PROPERTY OS_FOLDERS ON)
 #
 set(CEF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")
+set(CEF_USE_SANDBOX OFF CACHE BOOL "Disable sandbox")
+
 
 # Example 2: The binary distribution is in a separate directory from your
 #            project. Locate the binary distribution using the CEF_ROOT CMake
@@ -230,7 +229,7 @@ add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
 #   add_subdirectory(tests/gtest)
 #   add_subdirectory(tests/ceftests)
 # endif()
-
+# 
 # if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/cefclient")
 #   add_subdirectory(tests/cefclient)
 # endif()
